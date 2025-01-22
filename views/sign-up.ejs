@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <% if (!locals.currentUser) { %>
+
+    <h1>Sign Up</h1>
+    <%- include('partials/errors') %>
+    <hr />
+
+    <form method="post">
+      <p>
+        <label>
+          <span>Email: </span>
+          <input type="email" name="email" required />
+        </label>
+      </p>
+      <p>
+        <label>
+          <span>Password: </span>
+          <input type="password" name="password" required />
+        </label>
+      </p>
+      <p>
+        <label>
+          <span>Confirm password: </span>
+          <input type="password" name="confirmPassword" required />
+        </label>
+      </p>
+      <button type="submit">Sign Up</button>
+      <p>
+        <a href="/user/sign-in">Already signed up? Sign in here</a>
+      </p>
+    </form>
+
+    <% } %>
+    <p>Back to <a href="/">homepage</a></p>
+  </body>
+</html>
