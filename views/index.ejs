@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Uploader</title>
+  </head>
+  <body>
+    <% if (!locals.currentUser) { %>
+    <p>
+      <a href="user/sign-in">Sign In</a>
+    </p>
+    <p>
+      <a href="user/sign-up">Sign Up</a>
+    </p>
+    <% } else { %>
+    <h1>Welcome <%= currentUser.email.split("@")[0] %></h1>
+
+    <form action="user/logout" method="post">
+      <button type="submit">Logout</button>
+    </form>
+
+    <p>
+      <a href="file/upload">Upload a file</a>
+    </p>
+    <p>
+      <a href="folder/create">Create a folder</a>
+    </p>
+
+    <hr />
+    <ul>
+      <% folders.forEach(folder => { %>
+      <li>
+        <article>
+          <div style="display: flex; align-items: center">
+            <h2><%= folder.name %></h2>
+
+            <% if (folder.name !== "/") { %>
+
+            <span> &nbsp; &nbsp; </span>
+            <form action="folder/<%= folder.id %>/rename" method="get">
+              <button type="submit">Rename folder</button>
+            </form>
+
+            <span> &nbsp; &nbsp; </span>
+            <form action="folder/<%= folder.id %>/delete" method="post">
+              <button type="submit">Delete folder</button>
+            </form>
+            <% } %>
+          </div>
+
+          <% if (folder.files) { %>
+
+          <ul>
+            <% folder.files.forEach(file => { %>
+            <li style="display: flex; align-items: center">
+              <p>
+                <a href="file/<%= file.id %>"><%= file.filename %></a>
+              </p>
+              <span> &nbsp; &nbsp; </span>
+              <form action="file/<%= file.id %>/delete" method="post">
+                <button type="submit">Delete file</button>
+              </form>
+            </li>
+            <% }) %>
+          </ul>
+          <% } %>
+        </article>
+      </li>
+      <% }) %> <% } %>
+    </ul>
+  </body>
+</html>
