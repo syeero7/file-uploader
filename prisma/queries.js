@@ -7,7 +7,7 @@ export const getUser = async (uniqueIdentifier) => {
 
 export const createUser = async (email, password) => {
   await prisma.user.create({
-    data: { email, password, folders: { create: { name: "/" } } },
+    data: { email, password, folders: { create: { name: "main" } } },
   });
 };
 

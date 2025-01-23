@@ -35,7 +35,7 @@
           <div style="display: flex; align-items: center">
             <h2><%= folder.name %></h2>
 
-            <% if (folder.name !== "/") { %>
+            <% if (folder.name !== "main") { %>
 
             <span> &nbsp; &nbsp; </span>
             <form action="folder/<%= folder.id %>/rename" method="get">
