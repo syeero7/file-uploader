@@ -34,7 +34,8 @@ model File {
   size       Int
   uploadedAt String
   url        String
-  Folder     Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  publicId   String
+  folder     Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId   Int?
 }
 
