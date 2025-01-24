@@ -17,3 +17,8 @@ export const uploadFile = async (file, folder) => {
 export const deleteFile = async (publicId) => {
   await cloudinary.uploader.destroy(publicId);
 };
+
+export const deleteFolder = async (foldername) => {
+  await cloudinary.api.delete_resources_by_prefix(foldername);
+  await cloudinary.api.delete_folder(foldername);
+};

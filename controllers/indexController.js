@@ -2,12 +2,13 @@ import { validationResult } from "express-validator";
 
 import {
   createFolder,
-  deleteFolder,
+  deleteFolder as db_deleteFolder,
   getFolder,
   getFoldersWithFilesByUserId,
   renameFolder,
 } from "../prisma/queries.js";
 import { validateFoldername } from "../utils/validation.js";
+import { deleteFolder } from "../utils/cloudinary.js";
 
 export const getFoldersWithFiles = async (req, res) => {
   const userId = req.user?.id;
@@ -41,9 +42,12 @@ export const createFolderPost = [
 ];
 
 export const deleteFolderPost = async (req, res) => {
-  const { folderId } = req.params;
+  const userId = parseInt(req.user.id);
+  const folderId = parseInt(req.params.folderId);
+  const { name } = await getFolder(userId, { id: folderId });
 
-  await deleteFolder(parseInt(folderId));
+  await deleteFolder(name);
+  await db_deleteFolder(folderId);
   res.redirect("/");
 };
 
