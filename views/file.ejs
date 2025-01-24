@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File: <%= file.filename.split(".")[0] %></title>
+  </head>
+  <body>
+    <h1>File info</h1>
+    <p>File name: <%= file.filename %></p>
+    <p>
+      Size: <%= file.size < 1048576 ? `${(file.size /
+      Math.pow(1024,1)).toFixed(2)} KB` : `${(file.size / Math.pow(1024,
+      2)).toFixed(2)} MB` %>
+    </p>
+    <p>Uploaded at: <%= file.uploadedAt %></p>
+    <form action="<%= file.id %>/download" method="get">
+      <button type="submit">Download</button>
+    </form>
+    <p>Back to <a href="/">homepage</a></p>
+  </body>
+</html>
