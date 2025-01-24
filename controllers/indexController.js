@@ -5,10 +5,10 @@ import {
   deleteFolder as db_deleteFolder,
   getFolder,
   getFoldersWithFilesByUserId,
-  renameFolder,
+  renameFolder as db_renameFolder,
 } from "../prisma/queries.js";
 import { validateFoldername } from "../utils/validation.js";
-import { deleteFolder } from "../utils/cloudinary.js";
+import { deleteFolder, renameFolder } from "../utils/cloudinary.js";
 
 export const getFoldersWithFiles = async (req, res) => {
   const userId = req.user?.id;
@@ -44,9 +44,8 @@ export const createFolderPost = [
 export const deleteFolderPost = async (req, res) => {
   const userId = parseInt(req.user.id);
   const folderId = parseInt(req.params.folderId);
-  const { name } = await getFolder(userId, { id: folderId });
 
-  await deleteFolder(name);
+  await deleteFolder(`${userId}/${folderId}`);
   await db_deleteFolder(folderId);
   res.redirect("/");
 };
@@ -63,11 +62,10 @@ export const renameFolderPost = [
   validateFoldername,
   async (req, res) => {
     const errors = validationResult(req);
+    const userId = req.user.id;
     const folderId = parseInt(req.params.folderId);
 
     if (!errors.isEmpty()) {
-      const userId = req.user.id;
-
       const { name } = await getFolder(userId, { id: folderId });
       return res.status(400).render("folder", {
         title: "Rename folder",
@@ -77,7 +75,8 @@ export const renameFolderPost = [
     }
 
     const { foldername } = req.body;
-    await renameFolder(folderId, foldername);
+    await renameFolder(`${userId}/${folderId}`, `${userId}/${foldername}`);
+    await db_renameFolder(folderId, foldername);
     res.redirect("/");
   },
 ];

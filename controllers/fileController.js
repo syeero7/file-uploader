@@ -2,7 +2,6 @@ import https from "https";
 
 import {
   getFoldersByUserId,
-  getFolder,
   createFile,
   deleteFile as db_deleteFile,
   getFileById,
@@ -19,8 +18,8 @@ export const uploadFileGet = async (req, res) => {
 export const uploadFilePost = async (req, res) => {
   const userId = parseInt(req.user.id);
   const folderId = parseInt(req.body.foldername);
-  const { name } = await getFolder(userId, { id: folderId });
-  const { url, uploadedAt, publicId } = await uploadFile(req.file, name);
+  const foldername = `${userId}/${folderId}`;
+  const { url, uploadedAt, publicId } = await uploadFile(req.file, foldername);
   const { originalname, size } = req.file;
 
   await createFile(folderId, originalname, size, uploadedAt, url, publicId);
