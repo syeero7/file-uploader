@@ -6,6 +6,8 @@ import sessionStore from "./config/sessionStore.js";
 import { initializePassport } from "./config/passport.js";
 import indexRouter from "./routes/indexRouter.js";
 import userRouter from "./routes/userRouter.js";
+import fileRouter from "./routes/fileRouter.js";
+import e from "express";
 
 const app = express();
 
@@ -32,6 +34,12 @@ app.use((req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/user", userRouter);
+app.use("/file", fileRouter);
+
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500).send(error.message);
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
