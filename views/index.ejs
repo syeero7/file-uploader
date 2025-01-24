@@ -58,6 +58,10 @@
                 <a href="file/<%= file.id %>"><%= file.filename %></a>
               </p>
               <span> &nbsp; &nbsp; </span>
+              <form action="file/<%= file.id %>/download" method="get">
+                <button type="submit">Download file</button>
+              </form>
+              <span> &nbsp; &nbsp; </span>
               <form action="file/<%= file.id %>/delete" method="post">
                 <button type="submit">Delete file</button>
               </form>
