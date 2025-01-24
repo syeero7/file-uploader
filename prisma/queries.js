@@ -44,3 +44,32 @@ export const deleteFolder = async (folderId) => {
 export const renameFolder = async (folderId, name) => {
   await prisma.folder.update({ where: { id: folderId }, data: { name } });
 };
+
+export const createFile = async (
+  folderId,
+  filename,
+  size,
+  uploadedAt,
+  url,
+  publicId
+) => {
+  await prisma.file.create({
+    data: {
+      filename,
+      size,
+      uploadedAt,
+      url,
+      publicId,
+      folder: { connect: { id: folderId } },
+    },
+  });
+};
+
+export const getFileById = async (id) => {
+  const file = await prisma.file.findUnique({ where: { id } });
+  return file;
+};
+
+export const deleteFile = async (fileId) => {
+  await prisma.file.delete({ where: { id: fileId } });
+};
