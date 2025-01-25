@@ -22,9 +22,14 @@ export const createFolder = async (ownerId, foldername) => {
   });
 };
 
-export const getFolder = async (ownerId, folderUniqueIdentifier) => {
+export const getFolder = async (
+  ownerId,
+  folderUniqueIdentifier,
+  includeFiles = false
+) => {
   const folder = await prisma.folder.findFirst({
     where: { ...folderUniqueIdentifier, ownerId },
+    include: { files: includeFiles },
   });
   return folder;
 };
@@ -72,4 +77,11 @@ export const getFileById = async (id) => {
 
 export const deleteFile = async (fileId) => {
   await prisma.file.delete({ where: { id: fileId } });
+};
+
+export const updateFolderShareUrl = async (folderId, url, urlExpireAt) => {
+  await prisma.folder.update({
+    data: { url, urlExpireAt },
+    where: { id: folderId },
+  });
 };
