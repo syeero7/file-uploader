@@ -6,9 +6,15 @@ import {
   getFolder,
   getFoldersWithFilesByUserId,
   renameFolder as db_renameFolder,
+  updateFolderShareUrl,
 } from "../prisma/queries.js";
-import { validateFoldername } from "../utils/validation.js";
+import { validateExpireDate, validateFoldername } from "../utils/validation.js";
 import { deleteFolder, renameFolder } from "../utils/cloudinary.js";
+import {
+  getDateMinmax,
+  getShareFolderLink,
+  isExpired,
+} from "../utils/shareFolder.js";
 
 export const getFoldersWithFiles = async (req, res) => {
   const userId = req.user?.id;
@@ -80,3 +86,59 @@ export const renameFolderPost = [
     res.redirect("/");
   },
 ];
+
+export const shareFolderGet = async (req, res) => {
+  const userId = parseInt(req.user.id);
+  const folderId = parseInt(req.params.folderId);
+  const { name } = await getFolder(userId, { id: folderId });
+
+  res.render("share", {
+    title: "Share",
+    date: getDateMinmax(),
+    folder: { name },
+  });
+};
+
+export const shareFolderPost = [
+  validateExpireDate,
+  async (req, res) => {
+    const errors = validationResult(req);
+    const userId = parseInt(req.user.id);
+    const folderId = parseInt(req.params.folderId);
+    const { name } = await getFolder(userId, { id: folderId });
+
+    if (!errors.isEmpty()) {
+      return res.status(400).render("share", {
+        errors: errors.array(),
+        title: "Share",
+        date: getDateMinmax(),
+        folder: { name },
+      });
+    }
+
+    const { expireAt } = req.body;
+    const folderLink = getShareFolderLink(req.headers.origin, userId, folderId);
+
+    if (!isExpired(expireAt))
+      await updateFolderShareUrl(folderId, folderLink, expireAt);
+
+    res.render("share", {
+      title: "Share",
+      date: getDateMinmax(),
+      folder: { name },
+      folderLink,
+    });
+  },
+];
+
+export const getSharedFolder = async (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const { protocol, originalUrl } = req;
+  const url = `${protocol}://${req.get("host")}${originalUrl}`;
+  const folder = await getFolder(userId, { url }, true);
+
+  if (!folder) return res.status(400).json({ message: "Folder not found" });
+  if (isExpired(folder.urlExpireAt))
+    return res.status(400).json({ message: "Link is expired" });
+  res.render("share", { title: "Shared", folder });
+};

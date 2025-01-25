@@ -41,3 +41,13 @@ export const validateFoldername = [
     .isLength({ min: 1, max: 15 })
     .withMessage(`Folder name ${lengthErr(15)}`),
 ];
+
+export const validateExpireDate = [
+  body("expireAt").custom((value) => {
+    const [year, month, day] = value.split("-");
+    const date = new Date(`${year}-${month}-${day}`);
+    if (isNaN(date))
+      throw new Error("Expire date must be a valid mm-dd-yyyy format");
+    return true;
+  }),
+];
