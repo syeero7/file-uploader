@@ -47,6 +47,10 @@
               <button type="submit">Delete folder</button>
             </form>
             <% } %>
+            <span> &nbsp; &nbsp; </span>
+            <form action="folder/<%= folder.id %>/share" method="get">
+              <button type="submit">Share folder</button>
+            </form>
           </div>
 
           <% if (folder.files) { %>
