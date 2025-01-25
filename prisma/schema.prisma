@@ -21,11 +21,13 @@ model User {
 }
 
 model Folder {
-  id      Int    @id @default(autoincrement())
-  name    String
-  owner   User?  @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId Int?
-  files   File[]
+  id          Int     @id @default(autoincrement())
+  name        String
+  url         String?
+  urlExpireAt String?
+  owner       User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     Int?
+  files       File[]
 }
 
 model File {
