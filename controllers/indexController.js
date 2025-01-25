@@ -134,7 +134,8 @@ export const shareFolderPost = [
 export const getSharedFolder = async (req, res) => {
   const userId = parseInt(req.params.userId);
   const { protocol, originalUrl } = req;
-  const url = `${protocol}://${req.get("host")}${originalUrl}`;
+  const HOST = process.env.HOST_URL || `${protocol}://${req.get("host")}`;
+  const url = `${HOST}${originalUrl}`;
   const folder = await getFolder(userId, { url }, true);
 
   if (!folder) return res.status(400).json({ message: "Folder not found" });
