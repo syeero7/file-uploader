@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> Folder: <%= folder.name %></title>
+  </head>
+  <body>
+    <h1><%= title %> Folder: <%= folder.name %></h1>
+    <% if (title.match(/shared/i)) { %> <% if (!folder.files.length) { %>
+    <p>Folder is empty</p>
+    <% } %>
+
+    <ul>
+      <% folder.files.forEach(file => { %>
+
+      <li style="display: flex; align-items: center">
+        <p>
+          <a href="/file/<%= file.id %>"><%= file.filename %></a>
+        </p>
+        <span> &nbsp; &nbsp; </span>
+        <form action="/file/<%= file.id %>/download" method="get">
+          <button type="submit">Download file</button>
+        </form>
+      </li>
+
+      <% }) %>
+    </ul>
+    <% } else { %> <%- include('partials/errors') %>
+    <form method="post">
+      <p style="display: inline">
+        <label>
+          <span>Expire date: </span>
+          <input
+            type="date"
+            name="expireAt"
+            required
+            max="<%= date.max %>"
+            min="<%= date.min %>"
+            value="<%= date.min %>"
+          />
+        </label>
+      </p>
+      <span> &nbsp; &nbsp; </span>
+      <button type="submit">Share</button>
+    </form>
+    <% if (locals.folderLink) { %>
+    <span> &nbsp; &nbsp; </span>
+    <p>folder link: <a href="<%= folderLink %>"><%= folderLink %></a></p>
+    <% } } %>
+  </body>
+</html>
