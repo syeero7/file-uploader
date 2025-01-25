@@ -6,11 +6,12 @@ This is a file uploader build using Nodejs.
 
 ## Features
 
-- User Authentication
+- User Login
+- Public Folder Sharing
 - Folder Management
-  - Creation
-  - Renaming
-  - Deletion
+  - Create Folders
+  - Rename Folders
+  - Delete Folders
 - File Management
-  - Upload
-  - Deletion
+  - Upload Files
+  - Delete Files
